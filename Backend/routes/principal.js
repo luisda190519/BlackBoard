@@ -5,10 +5,11 @@ const student = require("../models/student");
 const teacher = require("../models/teacher");
 const {checkDuplicatedEmail,verifyLogin,} = require("../middlewares/loginAndSignUp");
 const router = express.Router();
+let activeSession = false;
 
 
 router.get("/", (req, res) => {
-    res.json("Home page")
+    res.json(activeSession)
 });
 
 router.get("/login/:role", (req, res) =>{
@@ -16,12 +17,12 @@ router.get("/login/:role", (req, res) =>{
 })
 
 router.post("/login/:role", async (req, res) =>{
-    console.log("aaaaaaaaaaaaaaaa")
     const person = {email: req.body.email, password: req.body.password};
 
     if (await verifyLogin(person, req.params.role)) {
         req.session.userActive = true;
-        res.redirect("/");
+        activeSession = req.session.userActive
+        res.json("Login succesfully")
     } else {
         res.json("Email or password incorrect");
     }
@@ -50,8 +51,8 @@ router.post("/register/:role", async (req, res) =>{
             const newTeacher = new teacher(person);
             await newTeacher.save();
         }
-        req.session.userID = true;
-        return res.redirect("/");
+        activeSession = req.session.userActive
+        return res.json("Login succesfully")
     } else {
         res.json("Email alredy exist");
     }
@@ -63,7 +64,7 @@ router.get("/logout", (req, res) => {
 
 router.post("/logout", (req, res) => {
     req.session.destroy();
-        res.redirect("/login");
+    res.redirect("/login");
 })
 
 module.exports = router;

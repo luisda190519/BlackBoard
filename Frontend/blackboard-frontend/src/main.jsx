@@ -55,31 +55,17 @@ const login = [
     },
 ];
 
-function getRoleParams() {
-    const { role } = useParams();
-
-    return <h1>role</h1> ;
-}
-
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <BrowserRouter>
             <Routes>
                 <Route
                     path="/login/:role"
-                    element={
-                        <Form login={login} name="login" role={getRoleParams} />
-                    }
+                    element={<Form login={login} name="login" />}
                 />
                 <Route
                     path="/register/:role"
-                    element={
-                        <Form
-                            register={register}
-                            name="register"
-                            role={getRoleParams}
-                        />
-                    }
+                    element={<Form register={register} name="register" />}
                 />
             </Routes>
         </BrowserRouter>

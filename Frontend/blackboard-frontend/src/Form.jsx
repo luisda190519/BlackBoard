@@ -1,7 +1,18 @@
 import React from "react";
+import axios from "axios";
+import { useState } from 'react';
+import { useParams, useNavigate } from "react-router-dom";
 
 const Form = function (props) {
-    console.log(props);
+    let { role } = useParams();
+    let navigate = useNavigate();
+    const [message, setMessage] = useState("");
+    const data = {};
+
+    const handleChange = function (e) {
+        data[e.target.name] = e.target.value;
+    };
+
     const items = props[props.name].map((element, i) => {
         return (
             <div className="mx-3" key={i}>
@@ -11,6 +22,9 @@ const Form = function (props) {
                         type={element.type}
                         className="form-control px-5 mx-auto text-left"
                         style={{ textAlign: "left" }}
+                        name={element.name.toLowerCase()}
+                        id={element.name.toLowerCase()}
+                        onChange={handleChange}
                     />
                 </label>
             </div>
@@ -18,29 +32,40 @@ const Form = function (props) {
     });
 
     const handleSubmit = async function (e, action) {
-        e.preventDefault()
-        try {
-            let res = await fetch("http://localhost:3000/" + action + "/" + props.role, {
-                method: "POST",
-                body: JSON.stringify(),
-            });
+        e.preventDefault();
 
-            let resJson = await res.json();
-            console.log(resJson);
-        } catch (error) {}
+        axios
+            .post("http://localhost:5173/" + action + "/" + role, data)
+            .then((response) =>
+                response.data === "Login succesfully"
+                    ? navigate("/")
+                    : setMessage("Email or password incorrect")
+            )
+            .catch((err) => {
+                console.error(err);
+            });
     };
 
     return (
-        <form className="container" onSubmit={e => { handleSubmit(e, props.name)}}>
+        <form
+            className="container"
+            onSubmit={(e) => {
+                handleSubmit(e, props.name);
+            }}
+        >
             <div className="container d-flex justify-content-center align-items-center mt-5">
                 <div className="row w-50">
                     <div className="col px-5 py-5 ">
                         <div className="card shadow">
                             <div className="card-body mb-3">
                                 <div className="text-center">{items}</div>
+                                <div className="text-center mt-2 text-danger">{message}</div>
                             </div>
                             <div className="row justify-content-center">
-                                <button className="btn btn-success w-50 mb-3">
+                                <button
+                                    className="btn btn-success w-50 mb-3"
+                                    type="submit"
+                                >
                                     Submit
                                 </button>
                             </div>

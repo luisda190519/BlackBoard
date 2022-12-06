@@ -11,13 +11,16 @@ const principalRoutes = require("./routes/principal");
 const courseRoutes = require("./routes/course");
 const announcementsRoutes = require("./routes/announcements");
 const gradesRoutes = require("./routes/grades");
+const studentRoutes = require('./routes/student');
+const teacherRoutes = require('./routes/teacher');
+
 
 const app = express();
-const port = 3000;
+const port = 5173;
 const dataBaseUrl =
   "mongodb+srv://luisda1905:mnbvcxz11@cluster0.chxbhvc.mongodb.net/?retryWrites=true&w=majority";
 let corsOPtions = {
-  origin: "https://localhost:" + port,
+  origin: "http://127.0.0.1:" + port,
 };
 
 const sessionConfig = {
@@ -39,6 +42,8 @@ app.use("/", principalRoutes);
 app.use("/course", courseRoutes);
 app.use("/course/:courseID/news", announcementsRoutes);
 app.use("/course/:courseID/grades", gradesRoutes);
+app.use("/student", studentRoutes)
+app.use("/teacher", teacherRoutes)
 
 //App view engine configuration
 app.engine("mustache", mustacheExpress());
@@ -51,4 +56,4 @@ async function main() {
 main().then(() => console.log("Connected to database"));
 main().catch((err) => console.log(err));
 
-app.listen(port, () => console.log("Connected on port 3000"));
+app.listen(port, () => console.log("Connected on port " + port));
