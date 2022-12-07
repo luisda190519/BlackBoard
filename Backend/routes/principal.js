@@ -3,13 +3,11 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const student = require("../models/student");
 const teacher = require("../models/teacher");
-const {checkDuplicatedEmail,verifyLogin,} = require("../middlewares/loginAndSignUp");
+const {checkDuplicatedEmail,verifyLogin, getID} = require("../middlewares/loginAndSignUp");
 const router = express.Router();
-let activeSession = false;
-
 
 router.get("/", (req, res) => {
-    res.json(activeSession)
+    res.json(req.session.userID)
 });
 
 router.get("/login/:role", (req, res) =>{
@@ -20,8 +18,8 @@ router.post("/login/:role", async (req, res) =>{
     const person = {email: req.body.email, password: req.body.password};
 
     if (await verifyLogin(person, req.params.role)) {
-        req.session.userActive = true;
-        activeSession = req.session.userActive
+        req.session.userID = getID(person, req.params.role);
+        req.session.role = req.params.role;
         res.json("Login succesfully")
     } else {
         res.json("Email or password incorrect");
@@ -51,7 +49,8 @@ router.post("/register/:role", async (req, res) =>{
             const newTeacher = new teacher(person);
             await newTeacher.save();
         }
-        activeSession = req.session.userActive
+        req.session.userID = getID(person, req.params.role);
+        req.session.role = req.params.role;
         return res.json("Login succesfully")
     } else {
         res.json("Email alredy exist");

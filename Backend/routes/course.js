@@ -2,16 +2,21 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  console.log("home");
-});
-
 router
   .route("/:courseID")
   .get((req, res) => {
-    res.send(req.params.courseID);
+    res.json(req.session.userActive, req.session.role)
   })
 
-  .post((req, res) => {});
+  .post((req, res) => {
+
+    const course = {
+      name:req.body.name,
+      description:req.body.description,
+      quantity:req.body.quantity,
+      teacher:req.session.userID
+    }
+
+  });
 
 module.exports = router;

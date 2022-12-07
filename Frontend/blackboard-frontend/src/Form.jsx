@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { useState } from 'react';
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const Form = function (props) {
@@ -31,7 +31,7 @@ const Form = function (props) {
         );
     });
 
-    const handleSubmit = async function (e, action) {
+    const handleSubmit = function (e, action) {
         e.preventDefault();
 
         axios
@@ -59,7 +59,9 @@ const Form = function (props) {
                         <div className="card shadow">
                             <div className="card-body mb-3">
                                 <div className="text-center">{items}</div>
-                                <div className="text-center mt-2 text-danger">{message}</div>
+                                <div className="text-center mt-2 text-danger">
+                                    {message}
+                                </div>
                             </div>
                             <div className="row justify-content-center">
                                 <button

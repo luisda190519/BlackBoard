@@ -26,9 +26,20 @@ module.exports.verifyLogin = async function (user, role) {
 
     if (!(userSearched === null)) {
         if (bcrypt.compareSync(user.password, userSearched.password)) {
-            return true;
+            return true
         }
     }
 
     return false;
+};
+
+module.exports.getID = async function (user, role) {
+    let userSearched = null;
+    if (role === "student") {
+        userSearched = await student.findOne({ email: user.email });
+    } else {
+        userSearched = await teacher.findOne({ email: user.email });
+    }
+
+    return userSearched.ObjectID;
 };

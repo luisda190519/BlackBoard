@@ -1,9 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Form from "./Form";
+import Home from "./Home";
 import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 
-const register = [
+const inputs = [
     {
         name: "First",
         type: "text",
@@ -39,19 +40,20 @@ const register = [
         type: "password",
         label: "Password",
     },
-];
-
-const login = [
     {
-        name: "Email",
+        name: "name",
         type: "text",
-        label: "Email",
+        label: "Name",
     },
-
     {
-        name: "Password",
-        type: "password",
-        label: "Password",
+        name: "description",
+        type: "text",
+        label: "Description",
+    },
+    {
+        name: "quantity",
+        type: "number",
+        label: "Quantity",
     },
 ];
 
@@ -60,12 +62,22 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <BrowserRouter>
             <Routes>
                 <Route
+                    path="/"
+                    element={<Home/>}
+                />
+                <Route
                     path="/login/:role"
-                    element={<Form login={login} name="login" />}
+                    element={<Form login={inputs.slice(4, 6)} name="login" />}
                 />
                 <Route
                     path="/register/:role"
-                    element={<Form register={register} name="register" />}
+                    element={
+                        <Form register={inputs.slice(0, 6)} name="register" />
+                    }
+                />
+                <Route
+                    path="/course/:courseID"
+                    element={<Form course={inputs.slice(6)} name="course" />}
                 />
             </Routes>
         </BrowserRouter>
